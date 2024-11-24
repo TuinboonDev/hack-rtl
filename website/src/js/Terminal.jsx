@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import '../css/terminal.css';
-import HackerSimulator from './HackSimulator';
 
 const artStyle = {
   color: '#33FF57',
@@ -20,7 +19,6 @@ const Typewriter = (text, delay, func, Spinner, spinTime) => {
   let Output = '';
   let index = 0;
   text = Spinner ? "⠋⠙⠹⠸⠼⠴⠦⠧⠇" : text;
-
 
 
   const intervalId = setInterval(() => {
@@ -102,9 +100,9 @@ function Terminal() {
           previousCommand = CommandArea.value;
           setprevusedCommand((prevArray) => [...prevArray, "guest@hack.rtl:~$ " + previousCommand]);
           if (CommandArea.value === "github") {
-            window.open("https://github.com/CragglesG/ads-b-ysws", '_blank');
+            window.open("https://github.com/CragglesG/hack-rtl", '_blank');
           } else if (CommandArea.value === "source") {
-            window.open("https://github.com/CragglesG/ads-b-ysws/tree/main/website", '_blank');
+            window.open("https://github.com/CragglesG/hack-rtl/tree/main/website", '_blank');
           }
           else if (CommandArea.value === "guide") {
             window.open("https://docs.google.com/document/d/11AMFcU8Zo07w1dffhjWyhSuk_MtKOdyNGZ2WN_FvTH8/", '_blank');
@@ -165,35 +163,25 @@ function Terminal() {
         {Text3.includes("Access") ? <span>Welcome!</span> : ""}
         {Text3.includes("Access") ? <span></span> : ""}<br />
         {Text3.includes("Access") ? <span><span style={{ color: "skyblue" }}>Available Commands:</span></span> : ""}
-        {Text3.includes("Access") ? <span><span style={{ color: "#c9c9c9" }}>General: </span> about, hacksim, neofetch, clear, instructions</span> : ""}
-        {Text3.includes("Access") ? <span><span style={{ color: "#c9c9c9" }}>Links:</span> github, submit, guide</span> : ""}
+        {Text3.includes("Access") ? <span><span style={{ color: "#c9c9c9" }}>General: </span> about, neofetch, clear, instructions</span> : ""}
+        {Text3.includes("Access") ? <span><span style={{ color: "#c9c9c9" }}>Links:</span> github, source, submit, guide</span> : ""}
 
         <br></br>
-        {Text3.includes("Access") ? <span>Thank you for visiting!◝(ᵔᵕᵔ)◜</span> : ""}
+        {Text3.includes("Access") ? <span>Thank you for visiting! ◝(ᵔᵕᵔ)◜</span> : ""}
         <br></br>
         <ul className='previousCommands' id='console23'>
           {prevusedCommand.map((item, index) => {
             if (item.match(new RegExp(`\\b${"github"}\\b`, 'g'))) {
-              return <li key={index}>{item}<br></br><br></br><span style={{ color: "#c9c9c9" }}>Opened GitHub https://github.com/CragglesG/ads-b-ysws</span><br></br><br></br></li>;
+              return <li key={index}>{item}<br></br><br></br><span style={{ color: "#c9c9c9" }}>Opened GitHub https://github.com/CragglesG/hack-rtl</span><br></br><br></br></li>;
             }
             else if (item.match(new RegExp(`\\b${"source"}\\b`, 'g'))) {
-              return <li key={index}>{item}<br></br><br></br><span style={{ color: "#c9c9c9" }}>Opened the source code of this site in a new tab: https://github.com/CragglesG/ads-b-ysws/tree/main/website</span><br></br><br></br></li>;
+              return <li key={index}>{item}<br></br><br></br><span style={{ color: "#c9c9c9" }}>Opened the source code of this site in a new tab: https://github.com/CragglesG/hack-rtl/tree/main/website</span><br></br><br></br></li>;
             }
             else if (item.match(new RegExp(`\\b${"guide"}\\b`, 'g'))) {
-              return <li key={index}>{item}<br></br><br></br><span style={{ color: "#c9c9c9" }}>Opened the guide in a new tab: https://smth.here</span><br></br><br></br></li>;
+              return <li key={index}>{item}<br></br><br></br><span style={{ color: "#c9c9c9" }}>Opened the guide in a new tab: https://docs.google.com/document/d/11AMFcU8Zo07w1dffhjWyhSuk_MtKOdyNGZ2WN_FvTH8/</span><br></br><br></br></li>;
             }
             else if (item.match(new RegExp(`\\b${"submit"}\\b`, 'g'))) {
               return <li key={index}>{item}<br></br><br></br><span style={{ color: "#c9c9c9" }}>hmmm. it looks like there's nothing here yet. maybe check again soon?</span><br></br><br></br></li>;
-            }
-
-            else if (item.match(new RegExp(`\\b${"hacksim"}\\b`, 'g'))) {
-              return <div><HackerSimulator></HackerSimulator><br></br>
-                To abort, use aborthack
-              </div>
-            }
-            else if (item.match(new RegExp(`\\b${"aborthack"}\\b`, 'g'))) {
-              return <div key={index}><li>{item}</li>
-                bash: {item.replace("guest@hack.rtl:~$", '')}: ERROR - Script terminated by the user</div>;
             }
             else if (item.match(new RegExp(`\\b${"clear"}\\b`, 'g'))) {
               return setprevusedCommand([]);
@@ -201,7 +189,7 @@ function Terminal() {
             else if (item.match(new RegExp(`\\b${"about"}\\b`, 'g'))) {
               return <div><li key={index}>{item}</li>
                 <div className='about'><br></br>
-                ads-b ysws is a potential hack club ysws run by hack clubbers. if you're a teen, you can get a free rtl2832/rt820t2-based dongle by making a desktop app that uses an rtl-sdr dongle. type 'instructions' for more. <br></br><br></br>
+                hack rtl is a potential hack club ysws created by hack clubbers. if you're a teen, you can get a free rtl2832/rt820t2-based dongle by making a desktop app that uses an rtl-sdr dongle. type 'instructions' for more. <br></br><br></br>
                 </div></div>
             }
             else if (item.match(new RegExp(`\\b${"instructions"}\\b`, 'g'))) {
@@ -215,38 +203,40 @@ function Terminal() {
                 <div className='neofetch'><br></br>
                 <div style={{ display: 'flex' }}>
                 {/* ASCII Art on the left */}
-                <div style={artStyle}>
-                  ⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⣶⣾⣿⣿⣿⣿⣷⣶⣶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀<br />
-                  ⠀⠀⠀⠀⠀⣠⢔⣫⢷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣄⠀⠀⠀⠀⠀<br />
-                  ⠀⠀⣠⢊⡴⡫⢚⡽⣟⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀<br />
-                  ⠀⠀⡴⣱⢫⢎⡔⡩⣚⠵⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠀⠀<br />
-                  ⠀⣼⣽⣳⣣⢯⣞⡜⡱⣫⢷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀<br />
-                  ⢸⣿⣿⣿⣿⣿⣿⣾⡽⣱⣫⠞⠉⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇<br />
-                  ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠃⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿<br />
-                  ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠘⠃⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿<br />
-                  ⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⡿<br />
-                  ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣤⣀⣀⣀⣠⣴⢟⡵⣳⢯⢿⣿⡟⣿⣿⣿⣿⡇<br />
-                  ⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⣞⡵⣫⢏⢞⡽⡽⣻⢯⡟⠀<br />
-                  ⠀⠀⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣚⢕⡡⢊⠜⡵⣣⠟⠀⠀<br />
-                  ⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣯⢷⣫⢖⡥⢊⡴⠋⠀⠀⠀⠀⠀<br />
-                  ⠀⠀⠀⠀⠀⠀⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⣞⣭⠞⠋⠀⠀⠀⠀⠀⠀<br />
-                  ⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠿⠿⢿⣿⣿⣿⣿⡿⠿⠟⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀
-                </div>
-
+                <div style={artStyle}>{`
+        _,met$$$$$gg.     
+      ,g$$$$$$$$$$$$$$$P.     
+    ,g$$P""       """Y$$.".     
+  ,$$P'              \`$$$.       
+',$$P       ,ggs.     \`$$b:     
+\`d$$'     ,$P"'   .    $$$     
+  $$P      d$'     ,    $$P
+  $$:      $$.   -    ,d$$'
+  $$;      Y$b._   _,d$P'
+  Y$$.    \`.\`"Y$$$$P"' 
+  \`$$b      "-.__
+  \`Y$$b
+    \`Y$$.
+      \`$$b.
+        \`Y$$b.
+          \`"Y$b._
+              \`""""
+             `}</div>
                 {/* Terminal text on the right */}
+
                 <div style={terminalStyle}>
                   <span style={{ color: "#33FF57" }}>guest@hack.rtl</span><br />
                   -------------------------<br />
-                  <span style={{ color: "#33FF57" }}>OS:</span> yswsOS 3.12 arm32<br />
-                  <span style={{ color: "#33FF57" }}>Host:</span> Hack RTL v0.3.4<br />
-                  <span style={{ color: "#33FF57" }}>Kernel:</span> 6.11.0-1004-ysws<br />
+                  <span style={{ color: "#33FF57" }}>OS:</span> Debian GNU/Linux 12 (bookworm) arm32<br />
+                  <span style={{ color: "#33FF57" }}>Host:</span> Hack RTL<br />
+                  <span style={{ color: "#33FF57" }}>Kernel:</span> 6.11.0-1004-hackrtl<br />
                   <span style={{ color: "#33FF57" }}>Uptime:</span> 21,373,712  mins<br />
                   <span style={{ color: "#33FF57" }}>Resolution:</span> 1920x1080<br />
                   <span style={{ color: "#33FF57" }}>DE:</span> GNOME 47.0 (wayland)<br />
                   <span style={{ color: "#33FF57" }}>WM:</span> Mutter<br />
                   <span style={{ color: "#33FF57" }}>Theme:</span> Adwaita [GTK2/3]<br />
                   <span style={{ color: "#33FF57" }}>Terminal:</span> gnome-terminal<br />
-                  <span style={{ color: "#33FF57" }}>CPU:</span> (2) @ 115MHz<br /><br />
+                  <span style={{ color: "#33FF57" }}>CPU:</span> (2) @ 150MHZ<br /><br />
                   
                   <span style={{color: "#FFFF00"}}>Fun fact!</span> Most climbing mishaps happen from exhaustion.<br />
                   Remember to take regular breaks!<br /><br />
@@ -260,7 +250,7 @@ function Terminal() {
             }
           })}
         </ul>
-        {Text3.includes("Access") ? <span className='commands'><span className='userPrefix'>guest@hack.rtl:~$</span> <input type="text" id="command" name="command" autoFocus></input></span> : ""}
+        {Text3.includes("Access") ? <span className='commands'><span className='userPrefix'>guest@hack.rtl:~$</span> <input type="text" id="command" name="command" autoComplete='off' autoFocus></input></span> : ""}
       </div>
     </div>
   );
