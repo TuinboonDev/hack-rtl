@@ -1,5 +1,4 @@
 import os
-from numpy import float64
 import pyModeS as pms
 from dotenv import load_dotenv
 from rtlsdr import RtlSdrTcpClient
