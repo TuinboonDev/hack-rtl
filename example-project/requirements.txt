@@ -1,0 +1,7 @@
+geopy
+pyModeS
+python-dotenv
+pyrtlsdr
+setuptools
+openai
+pyaudio
