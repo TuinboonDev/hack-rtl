@@ -12,26 +12,26 @@ print("Calculating weather near you...", end="\r")
 
 load_dotenv()
 
-LATITUDE = int(os.getenv("SERVER_LATITUDE", 0))
-LONGITUDE = int(os.getenv("SERVER_LONGITUDE", 0))
+LATITUDE = float(os.getenv("SERVER_LATITUDE", 0))
+LONGITUDE = float(os.getenv("SERVER_LONGITUDE", 0))
 
 directions = {
-    "N": 0,
-    "NNE": 22.5,
-    "NE": 45,
-    "ENE": 67.5,
+    "N": [0, 22.4],
+    "NNE": [22.5, 44.9],
+    "NE": [45, 67.4],
+    "ENE": [67.5, 89.9],
     "E": 90,
-    "ESE": 112.5,
-    "SE": 135,
-    "SSE": 157.5,
-    "S": 180,
-    "SSW": 202.5,
-    "SW": 225,
-    "WSW": 247.5,
-    "W": 270,
-    "WNW": 292.5,
-    "NW": 315,
-    "NNW": 337.5,
+    "ESE": [112.5, 134.9],
+    "SE": [135, 157.4],
+    "SSE": [157.5, 179.9],
+    "S": [180, 202.4],
+    "SSW": [202.5, 224.9],
+    "SW": [225, 247.4],
+    "WSW": [247.5, 269.9],
+    "W": [270, 292.4],
+    "WNW": [292.5, 314.9],
+    "NW": [315, 337.4],
+    "NNW": [337.5, 359.9],
 }
 
 direction_words = {
@@ -57,8 +57,8 @@ client = OpenAI()
 
 
 def get_direction(degrees):
-    for direction, degree in directions.items():
-        if degree - 11.25 < degrees < degree + 11.25:
+    for direction, degree_list in directions.items():
+        if degree_list[0] <= degrees <= degree_list[1]:
             return direction
 
 
@@ -71,6 +71,8 @@ sdr.sample_rate = 2.4e6  # Hz
 sdr.center_freq = 109e7  # 1090MHz, ADS-B frequency
 sdr.gain = "auto"
 
+sdr.open()
+
 samples = sdr.read_samples(256)
 sdr.close()
 
@@ -80,7 +82,8 @@ for msg in samples:
     msg = str(msg)
     if pms.df(msg) != 17:
         continue
-    pms.bds.infer(msg, mrar=True)
+    if pms.bds.infer(msg, mrar=True) != "BDS44":
+        continue
     alt = pms.adsb.altitude(msg) if type(pms.adsb.altitude(msg)) == float else 30000.0
     temp = pms.commb.temp44(msg)[0] + (1.98 * (alt / 1000))
     weather.append(
@@ -94,6 +97,12 @@ for msg in samples:
             temp,
         )
     )
+
+sdr.close()
+
+if len(weather) == 0:
+    print("No weather data found.")
+    exit()
 
 weather.sort(key=lambda x: gd.distance((LATITUDE, LONGITUDE), x[0]).km, reverse=True)
 
@@ -134,6 +143,7 @@ with client.audio.speech.with_streaming_response.create(
 ) as response:
     for chunk in response.iter_bytes(chunk_size=1024):
         player_stream.write(chunk)
+player_stream.close()
 
 map = folium.Map(location=[LATITUDE, LONGITUDE])
 
@@ -145,4 +155,6 @@ for i, temp in enumerate(temps):
     ).add_to(map)
 
 map.save("weather_map.html")
-WebBrowser.open_new_tab("file://" + os.getcwd() + "weather_map.html")
+
+file_path = os.path.join(os.getcwd(), "weather_map.html")
+WebBrowser.open_new_tab("file://" + file_path)
