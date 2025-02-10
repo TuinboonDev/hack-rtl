@@ -5,3 +5,5 @@ pyrtlsdr
 setuptools
 openai
 pyaudio
+folium
+web.sh
