@@ -140,8 +140,8 @@ map = folium.Map(location=[LATITUDE, LONGITUDE])
 for i, temp in enumerate(temps):
     folium.Marker(
         location=positions[i],
-        popup=f"Source {i+1}",
-        tooltip=f"Temperature: {temp}°C\nHumidity:{hums[i]}%\nPressure:{ps[i]}hPa\nWind direction:{dirs[i]}\nWind speed:{speeds[i]}",
+        popup=f"Temperature: {temp}°C\nHumidity:{hums[i]}%\nPressure:{ps[i]}hPa\nWind direction:{dirs[i]}\nWind speed:{speeds[i]}",
+        tooltip=f"Source {i+1}",
     ).add_to(map)
 
 map.save("weather_map.html")
