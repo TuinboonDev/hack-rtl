@@ -1,5 +1,4 @@
 import os
-import math
 from pyaudio import PyAudio, paInt16
 from openai import OpenAI
 from geopy import distance as gd
@@ -33,7 +32,7 @@ directions = {
     "NNW": 337.5,
 }
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI()
 
 def get_direction(degrees):
     for direction, degree in directions.items():
@@ -69,32 +68,35 @@ for msg in samples:
             pms.commb.hum44(msg),
             pms.commb.p44(msg),
             get_direction(pms.commb.wind44(msg)[1]),
+            pms.commb.wind44(msg)[0],
             temp,
         )
     )
 
 weather.sort(
-    key=lambda x: gd.distance((LATITUDE, LONGITUDE), [0]).km, reverse=True
+    key=lambda x: gd.distance((LATITUDE, LONGITUDE), x[0]).km, reverse=True
 )
 
 close_weather = weather[:5]
 distances = [gd.distance((LATITUDE, LONGITUDE), x[0]).km for x in close_weather]
 
-positions, alts, hums, ps, dirs, temps = zip(*close_weather)
+positions, alts, hums, ps, dirs, speeds, temps = zip(*close_weather)
 
 av_alt = sum(alts) / len(alts)
 av_hum = sum(hums) / len(hums)
 av_p = sum(ps) / len(ps)
 close_dir = dirs[0]
+close_speeds= speeds[0]
 av_temp = sum(temps) / len(temps)
 
-tts_text = f"This is the weather report for your area based on data from nearby aircraft. The average humidity is {av_hum} percent. The average pressure is {av_p} hectopascals. The average wind direction at the closest source is {close_dir}. The average temperature (corrected for altitude differences) is {av_temp} degrees Celsius. Please make sure to read the accuracy report to verify these results. Lower numbers often mean more accurate data."
+tts_text = f"This is the weather report for your area based on data from nearby aircraft. The average humidity is {av_hum} percent. The average pressure is {av_p} hectopascals. The average wind direction at the closest source is {close_dir}, and the average wind speed at the closest source is {close_speeds} knots. The average temperature (corrected for altitude differences) is {av_temp} degrees Celsius. Please make sure to read the accuracy report to verify these results. Lower numbers often mean more accurate data."
 
-print("Weather report (read by AI)")
+print("Weather report (read by AI)        ")
 print("-----------------------------")
 print(f"Average humidity: {av_hum}%")
 print(f"Average pressure: {av_p}hPa")
 print(f"Wind direction (at closest source): {close_dir}")
+print(f"Wind speed (at closest source): {close_speeds}kt")
 print(f"Average temperature (altitude corrected): {av_temp}°C")
 print("-----------------------------\n")
 print("Accuracy report")
