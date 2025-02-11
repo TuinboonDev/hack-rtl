@@ -1,12 +1,11 @@
 import os
 import folium
+import pyModeS as pms
 from pyaudio import PyAudio, paInt16
 from openai import OpenAI
 from geopy import distance as gd
-import pyModeS as pms
 from dotenv import load_dotenv
 from rtlsdr import RtlSdrTcpClient
-from websh.websh import WebBrowser
 
 print("Calculating weather near you...", end="\r")
 
@@ -57,6 +56,7 @@ client = OpenAI()
 
 
 def get_direction(degrees):
+    degrees = format(degrees, ".1f")
     for direction, degree_list in directions.items():
         if degree_list[0] <= degrees <= degree_list[1]:
             return direction
@@ -65,6 +65,7 @@ def get_direction(degrees):
 sdr = RtlSdrTcpClient(
     hostname=os.getenv("SERVER_HOST", "0.0.0.0"),
     port=int(os.getenv("SERVER_PORT", 8000)),
+    test_mode_enabled=True,
 )
 
 sdr.sample_rate = 2.4e6  # Hz
@@ -72,11 +73,12 @@ sdr.center_freq = 109e7  # 1090MHz, ADS-B frequency
 sdr.gain = "auto"
 
 sdr.open()
-
+print("Reading samples...             ", end="\r")
 samples = sdr.read_samples(256)
 sdr.close()
 
 weather = []
+print("Processing samples...", end="\r")
 
 for msg in samples:
     msg = str(msg)
@@ -116,14 +118,14 @@ av_temp = sum(temps) / len(temps)
 
 tts_text = f"This is the weather report for your area based on data from nearby aircraft. The average humidity is {av_hum} percent. The average pressure is {av_p} inches of mercury. The average wind direction at the closest source is {direction_words[close_dir]}, and the average wind speed at the closest source is {close_speed} knots. The average temperature (corrected for altitude differences) is {av_temp} degrees Celsius. Please make sure to read the accuracy report to verify these results. Lower numbers often mean more accurate data."
 
-print("Weather report (read by AI)        ")
+print("Weather report (read by AI)    ")
 print("-----------------------------")
 print(f"Average humidity: {av_hum}%")
 print(f"Average pressure: {av_p}inHg")
-print(f"Wind direction (at closest source): {close_dir}")
+print(f"Wind direction (at closest source): {direction_words[close_dir]}")
 print(f"Wind speed (at closest source): {close_speed}kt")
 print(f"Average temperature (altitude corrected): {av_temp}°C")
-print("-----------------------------\n")
+print("-----------------------------")
 print("Accuracy report")
 print("-----------------------------")
 print(f"Average altitude: {av_alt}ft")
@@ -131,7 +133,7 @@ print(f"Average source distance: {sum(distances) / len(distances)}km")
 print(f"Closest source distance: {distances[0]}km")
 print("-----------------------------")
 
-player_stream = PyAudio().open(format=paInt16, channels=1, rate=24000, output=True)
+player_stream = PyAudio().open(format=paInt16, channels=1, rate=44100, output=True)
 with client.audio.speech.with_streaming_response.create(
     model="tts-1",
     voice="alloy",
@@ -146,11 +148,11 @@ map = folium.Map(location=[LATITUDE, LONGITUDE])
 for i, temp in enumerate(temps):
     folium.Marker(
         location=positions[i],
-        popup=f"Temperature: {temp}°C\nHumidity:{hums[i]}%\nPressure:{ps[i]}hPa\nWind direction:{dirs[i]}\nWind speed:{speeds[i]}",
+        popup=f"Temperature: {temp}°C\nHumidity: {hums[i]}%\nPressure: {ps[i]}inHg\nWind direction:{dirs[i]}\nWind speed:{speeds[i]}",
         tooltip=f"Source {i+1}",
     ).add_to(map)
 
 map.save("weather_map.html")
 
 file_path = os.path.join(os.getcwd(), "weather_map.html")
-WebBrowser.open_new_tab("file://" + file_path)
+print(f"Map saved to {file_path}")

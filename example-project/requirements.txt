@@ -6,4 +6,3 @@ setuptools
 openai
 pyaudio
 folium
-web.sh
