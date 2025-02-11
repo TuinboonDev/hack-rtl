@@ -80,8 +80,6 @@ weather = []
 
 for msg in samples:
     msg = str(msg)
-    if pms.df(msg) != 17:
-        continue
     if pms.bds.infer(msg, mrar=True) != "BDS44":
         continue
     alt = pms.adsb.altitude(msg) if type(pms.adsb.altitude(msg)) == float else 30000.0
