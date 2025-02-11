@@ -20,7 +20,7 @@ directions = {
     "NNE": [22.5, 44.9],
     "NE": [45, 67.4],
     "ENE": [67.5, 89.9],
-    "E": 90,
+    "E": [90, 112.4],
     "ESE": [112.5, 134.9],
     "SE": [135, 157.4],
     "SSE": [157.5, 179.9],
@@ -98,13 +98,11 @@ for msg in samples:
         )
     )
 
-sdr.close()
-
 if len(weather) == 0:
     print("No weather data found.")
     exit()
 
-weather.sort(key=lambda x: gd.distance((LATITUDE, LONGITUDE), x[0]).km, reverse=True)
+weather.sort(key=lambda x: gd.distance((LATITUDE, LONGITUDE), x[0]).km)
 
 close_weather = weather[:5]
 distances = [gd.distance((LATITUDE, LONGITUDE), x[0]).km for x in close_weather]
@@ -123,7 +121,7 @@ tts_text = f"This is the weather report for your area based on data from nearby 
 print("Weather report (read by AI)        ")
 print("-----------------------------")
 print(f"Average humidity: {av_hum}%")
-print(f"Average pressure: {av_p}hPa")
+print(f"Average pressure: {av_p}inHg")
 print(f"Wind direction (at closest source): {close_dir}")
 print(f"Wind speed (at closest source): {close_speed}kt")
 print(f"Average temperature (altitude corrected): {av_temp}°C")
