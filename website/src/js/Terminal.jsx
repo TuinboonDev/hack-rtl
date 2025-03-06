@@ -236,7 +236,7 @@ function Terminal() {
                   <span style={{ color: "#33FF57" }}>WM:</span> Mutter<br />
                   <span style={{ color: "#33FF57" }}>Theme:</span> Adwaita [GTK2/3]<br />
                   <span style={{ color: "#33FF57" }}>Terminal:</span> gnome-terminal<br />
-                  <span style={{ color: "#33FF57" }}>CPU:</span> (2) @ 150MHZ<br /><br />
+                  <span style={{ color: "#33FF57" }}>CPU:</span> (2) @ 1090MHz<br /><br />
                   
                   <span style={{color: "#FFFF00"}}>Fun fact!</span> Most climbing mishaps happen from exhaustion.<br />
                   Remember to take regular breaks!<br /><br />
